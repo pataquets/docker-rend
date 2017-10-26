@@ -1,0 +1,25 @@
+rend:
+  image: pataquets/rend
+  command: -l1-sock /tmp/memcached1.sock -l2-sock /tmp/memcached2.sock -l2-enabled
+  ports:
+    - 11211:11211
+    - 11212:11212
+  volumes_from:
+    - sockfiles
+
+memcached1:
+  image: memcached
+  command: --verbose --unix-socket=/tmp/memcached1.sock
+  volumes_from:
+    - sockfiles
+
+memcached2:
+  image: memcached
+  command: --verbose --unix-socket=/tmp/memcached2.sock
+  volumes_from:
+    - sockfiles
+
+sockfiles:
+  image: alpine
+  volumes:
+    - /tmp/:/tmp/
